@@ -1,8 +1,9 @@
 import React from 'react';
+import { Error } from '../../types/index';
 import classNames from 'classnames';
 
 type Props = {
-  errorMessage: string;
+  errorMessage: Error;
   setErrorMessage: () => void;
 };
 

@@ -2,7 +2,7 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 
 import React from 'react';
-import { Todos } from '../Todos/Todos';
+import { Todos } from '../TodoItem/TodoItem';
 import { Todo } from '../../types/Todo';
 
 type Props = {

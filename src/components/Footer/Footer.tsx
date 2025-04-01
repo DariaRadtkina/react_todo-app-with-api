@@ -1,12 +1,12 @@
 import React from 'react';
 import classNames from 'classnames';
-import { FilterBy } from '../../types/Todo';
+import { FilterBy } from '../../types/index';
 
 type Props = {
   notCompletedTodosCount: number;
   completedTodoCount: number;
-  setFilterTodo: (arg: string) => void;
-  filterTodo: string;
+  setFilterTodo: (arg: FilterBy) => void;
+  filterTodo: FilterBy;
   clearCompletedTodos: () => void;
 };
 

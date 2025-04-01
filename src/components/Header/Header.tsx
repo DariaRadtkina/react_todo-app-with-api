@@ -22,14 +22,14 @@ export const Header: React.FC<Props> = ({
   toggleAllTodos,
   isTodosEmpty,
 }) => {
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleChanges = (event: React.FormEvent) => {
     event.preventDefault();
     addTodo(inputValue);
   };
 
   return (
     <header className="todoapp__header">
-      {isTodosEmpty !== 0 && (
+      {isTodosEmpty > 0 && (
         <button
           type="button"
           className={classNames('todoapp__toggle-all', {
@@ -40,7 +40,7 @@ export const Header: React.FC<Props> = ({
         />
       )}
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleChanges}>
         <input
           data-cy="NewTodoField"
           type="text"
