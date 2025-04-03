@@ -1,6 +1,6 @@
 import React from 'react';
 import { Error } from '../../types/index';
-import classNames from 'classnames';
+import cn from 'classnames';
 
 type Props = {
   errorMessage: Error;
@@ -14,7 +14,7 @@ export const ErrorNotification: React.FC<Props> = ({
   return (
     <div
       data-cy="ErrorNotification"
-      className={classNames(
+      className={cn(
         'notification',
         'is-danger',
         'is-light',

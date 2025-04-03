@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { UserWarning } from './UserWarning';
 import * as clientData from './api/todos';
 import { Header } from './components/Header/Header';
@@ -14,7 +14,7 @@ export const App: React.FC = () => {
 
   const [errorMessage, setErrorMessage] = useState<Error>(Error.NO_ERROR);
 
-  const [loadingAll, setloadingAll] = useState(true);
+  const [isLoadingAll, setIsLoadingAll] = useState(true);
   const [loadingTodo, setLoadingTodo] = useState<number[]>([]);
 
   const [tempTodo, setTempTodo] = useState<Todo | null>(null);
@@ -34,7 +34,7 @@ export const App: React.FC = () => {
   const clearError = () => setErrorMessage(Error.NO_ERROR);
 
   function getClientData() {
-    setloadingAll(true);
+    setIsLoadingAll(true);
 
     clientData
       .getTodos()
@@ -44,7 +44,7 @@ export const App: React.FC = () => {
       .catch(() => {
         catchErrors(Error.LOAD);
       })
-      .finally(() => setloadingAll(false));
+      .finally(() => setIsLoadingAll(false));
   }
 
   useEffect(getClientData, []);
@@ -90,6 +90,7 @@ export const App: React.FC = () => {
         setLoadingTodo((prev: number[]) =>
           prev.filter(id => id !== clientData.USER_ID),
         );
+
         setIsInputDisabled(false);
         setTimeout(() => {
           inputRef.current?.focus();
@@ -97,7 +98,7 @@ export const App: React.FC = () => {
       });
   }
 
-  function deleteTodo(todoId: number) {
+  const deleteTodo = useCallback((todoId: number) => {
     setLoadingTodo((prev: number[]) => [...prev, todoId]);
     clearError();
 
@@ -115,7 +116,7 @@ export const App: React.FC = () => {
         setLoadingTodo((prev: number[]) => prev.filter(id => id !== todoId));
         inputRef.current?.focus();
       });
-  }
+  }, []);
 
   function updateTodo(todo: Todo) {
     const trimmedTitle = todo.title.trim();
@@ -169,37 +170,40 @@ export const App: React.FC = () => {
     setNewTitleTodo('');
   };
 
-  function toggleTodo(todo: Todo) {
-    if (loadingTodo.includes(todo.id)) {
-      return;
-    }
+  const toggleTodo = useCallback(
+    (todo: Todo) => {
+      if (loadingTodo.includes(todo.id)) {
+        return;
+      }
 
-    setLoadingTodo((prev: number[]) => [...prev, todo.id]);
+      setLoadingTodo((prev: number[]) => [...prev, todo.id]);
 
-    clientData
-      .updateTodos(todo.id, { completed: !todo.completed })
-      .then((updatedTodo: Todo) => {
-        setTodos(currentTodos =>
-          currentTodos.map(currTodos =>
-            currTodos.id === updatedTodo.id ? updatedTodo : currTodos,
-          ),
-        );
-      })
-      .catch(() => {
-        catchErrors(Error.UPDATE);
-      })
-      .finally(() => {
-        setLoadingTodo((prev: number[]) => {
-          return prev.filter(id => id !== todo.id);
+      clientData
+        .updateTodos(todo.id, { completed: !todo.completed })
+        .then((updatedTodo: Todo) => {
+          setTodos(currentTodos =>
+            currentTodos.map(currTodos =>
+              currTodos.id === updatedTodo.id ? updatedTodo : currTodos,
+            ),
+          );
+        })
+        .catch(() => {
+          catchErrors(Error.UPDATE);
+        })
+        .finally(() => {
+          setLoadingTodo((prev: number[]) => {
+            return prev.filter(id => id !== todo.id);
+          });
         });
-      });
-  }
+    },
+    [loadingTodo],
+  );
 
   const countTodosByStatus = (todosForFilter: Todo[], isCompleted: boolean) =>
     todosForFilter.filter(todo => todo.completed === isCompleted);
   const isTodosEmpty = todos.length;
 
-  function toggleAllTodos() {
+  const toggleAllTodos = useCallback(() => {
     const completedTodos = countTodosByStatus(todos, true);
     const allCompleted = completedTodos.length === todos.length;
 
@@ -208,13 +212,13 @@ export const App: React.FC = () => {
         toggleTodo(todo);
       }
     });
-  }
+  }, [todos, toggleTodo]);
 
-  function clearCompletedTodos() {
+  const clearCompletedTodos = useCallback(() => {
     const allCompleted = todos.filter((todo: Todo) => todo.completed);
 
     allCompleted.forEach((todo: Todo) => deleteTodo(todo.id));
-  }
+  }, [todos, deleteTodo]);
 
   const filteredByCompleted = todos.filter(todo => {
     switch (filterTodo) {
@@ -248,7 +252,7 @@ export const App: React.FC = () => {
           toggleAllTodos={toggleAllTodos}
           isTodosEmpty={isTodosEmpty}
         />
-        {!loadingAll ? (
+        {!isLoadingAll ? (
           <TodoList
             todos={filteredByCompleted}
             deleteTodo={deleteTodo}

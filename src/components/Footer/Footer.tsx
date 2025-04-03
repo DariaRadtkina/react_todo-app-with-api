@@ -1,5 +1,5 @@
 import React from 'react';
-import classNames from 'classnames';
+import cn from 'classnames';
 import { FilterBy } from '../../types/index';
 
 type Props = {
@@ -27,7 +27,7 @@ export const Footer: React.FC<Props> = ({
         <a
           href="#/"
           data-cy="FilterLinkAll"
-          className={classNames('filter__link', {
+          className={cn('filter__link', {
             selected: filterTodo === FilterBy.ALL,
           })}
           onClick={() => setFilterTodo(FilterBy.ALL)}
@@ -38,7 +38,7 @@ export const Footer: React.FC<Props> = ({
         <a
           href="#/active"
           data-cy="FilterLinkActive"
-          className={classNames('filter__link', {
+          className={cn('filter__link', {
             selected: filterTodo === FilterBy.ACTIVE,
           })}
           onClick={() => setFilterTodo(FilterBy.ACTIVE)}
@@ -49,7 +49,7 @@ export const Footer: React.FC<Props> = ({
         <a
           href="#/completed"
           data-cy="FilterLinkCompleted"
-          className={classNames('filter__link', {
+          className={cn('filter__link', {
             selected: filterTodo === FilterBy.COMPLETED,
           })}
           onClick={() => setFilterTodo(FilterBy.COMPLETED)}

@@ -1,5 +1,5 @@
 import React from 'react';
-import classNames from 'classnames';
+import cn from 'classnames';
 
 type Props = {
   notCompletedTodosCount: number;
@@ -32,7 +32,7 @@ export const Header: React.FC<Props> = ({
       {isTodosEmpty > 0 && (
         <button
           type="button"
-          className={classNames('todoapp__toggle-all', {
+          className={cn('todoapp__toggle-all', {
             active: notCompletedTodosCount === 0,
           })}
           data-cy="ToggleAllButton"

@@ -2,7 +2,7 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 
 import React from 'react';
-import classNames from 'classnames';
+import cn from 'classnames';
 import { Todo } from '../../types/Todo';
 
 type Props = {
@@ -19,14 +19,14 @@ export const TodoItem: React.FC<Props> = ({
   deleteTodo,
 }) => {
   const { id, userId, title, completed } = todo;
-  const loadingAll = isTemp
+  const isLoadingAll = isTemp
     ? loadingTodo.includes(userId)
     : loadingTodo.includes(id);
 
   return (
     <div
       data-cy="Todo"
-      className={classNames('todo', { completed: completed && !isTemp })}
+      className={cn('todo', { completed: completed && !isTemp })}
     >
       <label className="todo__status-label">
         <input
@@ -34,7 +34,7 @@ export const TodoItem: React.FC<Props> = ({
           type="checkbox"
           className="todo__status"
           checked={completed}
-          disabled={isTemp || loadingAll}
+          disabled={isTemp || isLoadingAll}
         />
       </label>
 
@@ -53,7 +53,7 @@ export const TodoItem: React.FC<Props> = ({
 
       <div
         data-cy="TodoLoader"
-        className={`modal overlay ${loadingAll ? 'is-active' : ''}`}
+        className={cn('modal', 'overlay', { 'is-active': isLoadingAll })}
       >
         <div className="modal-background has-background-white-ter" />
         <div className="loader" />

@@ -2,7 +2,7 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 
 import React from 'react';
-import classNames from 'classnames';
+import cn from 'classnames';
 import { Todo } from '../../types/Todo';
 
 type Props = {
@@ -42,7 +42,7 @@ export const Todos: React.FC<Props> = ({
   };
 
   return (
-    <div data-cy="Todo" className={`todo ${todo.completed && 'completed'}`}>
+    <div data-cy="Todo" className={cn('todo', { completed: todo.completed })}>
       <label className="todo__status-label" onClick={() => toggleTodo(todo)}>
         <input
           data-cy="TodoStatus"
@@ -87,7 +87,7 @@ export const Todos: React.FC<Props> = ({
 
       <div
         data-cy="TodoLoader"
-        className={classNames('modal', 'overlay', {
+        className={cn('modal', 'overlay', {
           'is-active': loadingTodo.includes(todo.id),
         })}
       >
